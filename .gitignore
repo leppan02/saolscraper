@@ -1,2 +1,5 @@
 dict.txt
-seen.txt
+Pipfile.lock
+pending.data
+done.data
+available.data
