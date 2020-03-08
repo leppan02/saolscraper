@@ -55,10 +55,10 @@ def rec(prefix):
 cur = new()
 while(cur!='..'):
     starttime = time.time()
-    print(cur)
+    print('scraping '+cur)
     rec(cur)
     send(cur)
-    print(cur+' done!!!')
-    print('rate '+str(len(words)/(time.time()-starttime))+' words per second')
+    print(cur+' is done')
+    print('With a rate of '+str(len(words)*60/(time.time()-starttime))+' words per hour')
     words = []
     cur = new()
