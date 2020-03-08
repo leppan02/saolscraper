@@ -1,5 +1,3 @@
 dict.txt
 Pipfile.lock
-pending.data
-done.data
-available.data
+*.data
