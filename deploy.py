@@ -5,16 +5,17 @@ import re
 import urllib.parse
 alphabet = "abcdefghijklmnopqrstuvwxyzåäö-"
 
-def send(a, b):
+def send(b):
+    global words
     URL = "http://213.64.176.135:8000"
-    words = ';'.join(a)
+    words = ';'.join(words)
     data = {b : words} 
     r = requests.post(url = URL, data = data) 
     return
 
 def new():
     URL = "http://213.64.176.135:8000"
-    r = urllib.parse.unquote(requests.get(url = URL).content.decode())[0]
+    r = urllib.parse.unquote(requests.get(url = URL).content.decode())[:2]
     return r 
 words = []
 def rec(prefix):
@@ -48,13 +49,13 @@ def rec(prefix):
         word = word[word.find("</span>")+7:]
         word = word[:word.find("<span")]
         #print(word)
-        words+=word
+        words.append(word)
 
 cur = new()
-while(cur!='.'):
+while(cur!='..'):
     print(cur)
     rec(cur)
-    send(words, cur)
+    send(cur)
     print(cur+' done!!!')
     words = []
     cur = new()
