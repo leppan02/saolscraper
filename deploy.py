@@ -3,6 +3,7 @@ from pyquery import PyQuery as pq
 import urllib
 import re
 import urllib.parse
+import time
 alphabet = "abcdefghijklmnopqrstuvwxyzåäö-"
 
 def send(b):
@@ -20,7 +21,7 @@ def new():
 words = []
 def rec(prefix):
     global words
-    print("Prefix:", prefix)
+    #print("Prefix:", prefix)
     res = requests.get("https://svenska.se/tri/f_saol.php?sok="+prefix+"%2A",
         headers={
             'Host': 'svenska.se',
@@ -53,9 +54,11 @@ def rec(prefix):
 
 cur = new()
 while(cur!='..'):
+    starttime = time.time()
     print(cur)
     rec(cur)
     send(cur)
     print(cur+' done!!!')
+    print('rate '+str(len(words)/(time.time()-starttime))+' words per second')
     words = []
     cur = new()

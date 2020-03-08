@@ -9,6 +9,5 @@ with open('pending.data', 'rb') as filehandle:
 with open('done.data', 'rb') as filehandle:
     done = pickle.load(filehandle)
 
-print("available", len(available))
-print("pending", len(pending))
-print("done", len(done))
+print(pending)
+print(len(done)/(len(done)+len(available)+len(pending)))
