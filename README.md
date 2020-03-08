@@ -1,4 +1,4 @@
-# saolscraper
+# Saol Scraper
 ## Deploy
 `pipenv install`
 `pipenv shell`
