@@ -66,7 +66,10 @@ def currentletter():
     if(len(available) == 0):
         if(len(pending) == 0):
             return '..'
-        return pending[0]
+        ut = pending[0]
+        pending.remove(ut)
+        pending.append(ut)
+        return ut
     sd = available[0]
     available.remove(sd)
     pending.append(sd)
