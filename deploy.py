@@ -7,20 +7,22 @@ import time
 import pickle
 alphabet = "abcdefghijklmnopqrstuvwxyzåäö-"
 
-def send(b):
+def send(b, words):
     URL = "http://213.64.176.135:8000"
-    words = ';'.join(words)
-    data = {b : words} 
+    words = ';'.join(words)+'@'+b
+    data = {'a' : words} 
     r = requests.post(url = URL, data = data) 
     return
 
 def new():
     URL = "http://213.64.176.135:8000"
-    return = urllib.parse.unquote(requests.get(url = URL).content.decode())[:2].split(';')
+    tmp = urllib.parse.unquote(requests.get(url = URL).content.decode()).split('@')
+    tmp[0] = tmp[0].split(';')
+    return tmp
 
 def exist(cur):
     #print("Prefix:", prefix)
-    res = requests.get("https://svenska.se/tri/f_saol.php?sok="+cur,
+    res =requests.get("https://svenska.se/tri/f_saol.php?sok="+cur,
         headers={
             'Host': 'svenska.se',
             'Connection': 'keep-alive',
@@ -37,10 +39,12 @@ def exist(cur):
     return True
 
 inp = new()
-while(inp!='.'):
+while(inp[0]!='.'):
     words = []
-    for i in inp:
-        if(test(i.decode('ascii'))):
+    print(inp)
+    for i in inp[0]:
+        if(exist(i)):
+            print(i)
             words.append(i)
-    send(words)
+    send(inp[1],words)
     inp = new()

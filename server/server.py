@@ -7,8 +7,11 @@ import pickle
 available = []
 done = []
 pending = []
+alldata = []
 def readvar():
-    global available, done, pending
+    global available, done, pending, alldata
+    with open('all.data', 'rb') as filehandle:
+        alldata = pickle.load(filehandle)
     with open('available.data', 'rb') as filehandle:
         available = pickle.load(filehandle)
 
@@ -31,15 +34,18 @@ def writevar():
         pickle.dump(done, filehandle)
 
 def add(a):
-    f = open("dict.txt", "a")
+    a = a.split('@')[0].split(';')
+    print(a)
+    f = open("ndict.txt", "a")
     for word in a:
         f.write(word + "\n")
     f.close()
 
 def seen(a):
-    if(a in pending):
-        pending.remove(a)
-        done.append(a)
+    a = a.split('@')[1]
+    if(int(a) in pending):
+        pending.remove(int(a))
+        done.append(int(a))
         return True
     return False
 
@@ -57,23 +63,23 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
         response = BytesIO()
         body = self.rfile.read(content_length)
-        body = urllib.parse.unquote((body.decode('UTF-8')))
-        if(seen(body[:2])):
-            add(body[3:].split(';'))
+        body = urllib.parse.unquote((body.decode('UTF-8')))[2:]
+        if(seen(body)):
+            add(body)
         writevar()
 
 def currentletter():
     if(len(available) == 0):
         if(len(pending) == 0):
-            return '..'
-        ut = pending[0]
-        pending.remove(ut)
-        pending.append(ut)
-        return ut
-    sd = available[0]
-    available.remove(sd)
-    pending.append(sd)
-    return sd
+            return '.'
+        u = pending[0]
+        pending.remove(u)
+        pending.append(u)
+        return alldata[u]+'@'+str(u)
+    ut = available[0]
+    available.remove(ut)
+    pending.append(ut)
+    return alldata[ut]+'@'+str(ut)
 
     
     
