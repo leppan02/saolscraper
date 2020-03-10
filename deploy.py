@@ -4,10 +4,10 @@ import urllib
 import re
 import urllib.parse
 import time
+import pickle
 alphabet = "abcdefghijklmnopqrstuvwxyzåäö-"
 
 def send(b):
-    global words
     URL = "http://213.64.176.135:8000"
     words = ';'.join(words)
     data = {b : words} 
@@ -16,13 +16,11 @@ def send(b):
 
 def new():
     URL = "http://213.64.176.135:8000"
-    r = urllib.parse.unquote(requests.get(url = URL).content.decode())[:2]
-    return r 
-words = []
-def rec(prefix):
-    global words
+    return = urllib.parse.unquote(requests.get(url = URL).content.decode())[:2].split(';')
+
+def exist(cur):
     #print("Prefix:", prefix)
-    res = requests.get("https://svenska.se/tri/f_saol.php?sok="+prefix+"%2A",
+    res = requests.get("https://svenska.se/tri/f_saol.php?sok="+cur,
         headers={
             'Host': 'svenska.se',
             'Connection': 'keep-alive',
@@ -35,30 +33,14 @@ def rec(prefix):
         })
 
     if res.text.find("gav inga svar") != -1:
-        return
+        return False
+    return True
 
-    if res.text.find("...") != -1:
-        for newLetter in range(29):
-            rec(prefix+alphabet[newLetter])
-        return
-
-    #print(res.text)
-
-    d = pq(res.text)
-    for row in d(".slank"):
-        word = d(row).html()
-        word = word[word.find("</span>")+7:]
-        word = word[:word.find("<span")]
-        #print(word)
-        words.append(word)
-
-cur = new()
-while(cur!='..'):
-    starttime = time.time()
-    print('scraping '+cur)
-    rec(cur)
-    send(cur)
-    print(cur+' is done')
-    print('With a rate of '+str(len(words)*60/(time.time()-starttime))+' words per hour')
+inp = new()
+while(inp!='.'):
     words = []
-    cur = new()
+    for i in inp:
+        if(test(i.decode('ascii'))):
+            words.append(i)
+    send(words)
+    inp = new()
